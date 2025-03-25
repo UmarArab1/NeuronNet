@@ -1,7 +1,4 @@
-Вот пример готового README.md для твоей библиотеки:
 
-
----
 
 NeuronNet
 
@@ -28,7 +25,7 @@ pip install neuronnet  # Если библиотека будет доступн
 
 Или клонируйте репозиторий:
 
-git clone https://github.com/твой_ник/neuronnet.git  
+git clone https://github.com/UmarArab1/NeuronNet  
 cd neuronnet
 
 Пример использования
