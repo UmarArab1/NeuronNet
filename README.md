@@ -57,5 +57,29 @@ for i, model in enumerate(models):
 Разработчик: Умар
 Контакты: [umarfrost2011@gmail.com]
 
+```mermaid
+classDiagram
+    class CollectiveLearningModel {
+        +int input_size
+        +int hidden_size
+        +int output_size
+        +weights_input_hidden
+        +weights_hidden_output
+        +bias_hidden
+        +bias_output
+        +forward(X)
+        +backward(X, y, output, hidden_output, learning_rate)
+    }
 
+    class Training {
+        +collective_training(models, X, y, epochs, learning_rate)
+    }
+
+    class NeuronNet {
+        +CollectiveLearningModel models[]
+        +train(X, y, epochs, learning_rate)
+    }
+
+    CollectiveLearningModel --> Training : uses
+    Training --> NeuronNet : interacts
 
