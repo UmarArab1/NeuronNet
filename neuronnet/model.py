@@ -16,13 +16,13 @@ class CollectiveLearningModel:
         final_input = np.dot(hidden_output, self.weights_hidden_output) + self.bias_output
         return final_input, hidden_output
 
-    def backward(self, X, y, output, hidden_output, learning_rate):
+    def backward(self, X, y, output, hidden_output, learning_rate, lambda_reg=0.01):
         output_error = output - y
         output_gradient = output_error
         hidden_error = np.dot(output_gradient, self.weights_hidden_output.T)
         hidden_gradient = hidden_error * (1 - hidden_output ** 2)
 
-        self.weights_input_hidden -= learning_rate * np.dot(X.T, hidden_gradient)
-        self.weights_hidden_output -= learning_rate * np.dot(hidden_output.T, output_gradient)
+        self.weights_input_hidden -= learning_rate * (np.dot(X.T, hidden_gradient) + lambda_reg * self.weights_input_hidden)
+        self.weights_hidden_output -= learning_rate * (np.dot(hidden_output.T, output_gradient) + lambda_reg * self.weights_hidden_output)
         self.bias_hidden -= learning_rate * np.sum(hidden_gradient, axis=0, keepdims=True)
         self.bias_output -= learning_rate * np.sum(output_gradient, axis=0, keepdims=True)
