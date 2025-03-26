@@ -1,7 +1,7 @@
 import numpy as np
 
 class AdamOptimizer:
-    def __init__(self, learning_rate=0.001, beta1=0.9, beta2=0.999, epsilon=1e-8):
+    def __init__(self, learning_rate=0.001, beta1=0.9, beta2=0.999, epsilon=1e-8, decay_rate=0.0):
         self.learning_rate = learning_rate
         self.beta1 = beta1
         self.beta2 = beta2
@@ -26,7 +26,7 @@ class AdamOptimizer:
         return param
 
 class CollectiveLearningModel:
-    def __init__(self, input_size, hidden_size, output_size):
+    def __init__(self, input_size, hidden_size, output_size, activation_function='relu'):
         self.input_size = input_size
         self.hidden_size = hidden_size
         self.output_size = output_size
@@ -37,7 +37,12 @@ class CollectiveLearningModel:
     
     def forward(self, X):
         self.hidden = np.dot(X, self.weights_input_hidden) + self.bias_hidden
-        self.hidden = np.maximum(0, self.hidden)  # ReLU activation
+        if activation_function == 'relu':
+            self.hidden = np.maximum(0, self.hidden)  # ReLU activation
+        elif activation_function == 'tanh':
+            self.hidden = np.tanh(self.hidden)  # Tanh activation
+        elif activation_function == 'sigmoid':
+            self.hidden = 1 / (1 + np.exp(-self.hidden))  # Sigmoid activation
         output = np.dot(self.hidden, self.weights_hidden_output) + self.bias_output
         return output, self.hidden
     
@@ -51,9 +56,14 @@ class CollectiveLearningModel:
         self.bias_hidden += learning_rate * np.sum(hidden_grad, axis=0)
         self.bias_output += learning_rate * np.sum(output_grad, axis=0)
     
-def collective_training(models, X, y, epochs, learning_rate, batch_size=32):
+def collective_training(models, X, y, epochs, learning_rate, batch_size=32, early_stopping=False, patience=5):
     optimizer = AdamOptimizer(learning_rate)
+    previous_loss = float('inf')
     for epoch in range(epochs):
+        if early_stopping and epoch > 0 and loss > previous_loss:
+            print("Early stopping triggered after {} epochs".format(patience))
+            break
+
         for i in range(0, X.shape[0], batch_size):
             X_batch = X[i:i+batch_size]
             y_batch = y[i:i+batch_size]
