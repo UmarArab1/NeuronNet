@@ -60,11 +60,12 @@ def collective_training(models, X, y, epochs, learning_rate, batch_size=32, earl
     optimizer = AdamOptimizer(learning_rate)
     previous_loss = float('inf')
     for epoch in range(epochs):
-        if early_stopping and epoch > 0 and loss > previous_loss:
+        if early_stopping and epoch > 0 and previous_loss > 0:  # Ensure previous_loss is defined
             print("Early stopping triggered after {} epochs".format(patience))
             break
 
-        for i in range(0, X.shape[0], batch_size):
+        loss = np.mean((y - output) ** 2)  # Calculate loss for early stopping
+        for i in range(0, X.shape[0], batch_size): 
             X_batch = X[i:i+batch_size]
             y_batch = y[i:i+batch_size]
             for model in models:

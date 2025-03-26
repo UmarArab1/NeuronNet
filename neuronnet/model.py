@@ -22,7 +22,7 @@ class CollectiveLearningModel:
         final_input = np.dot(hidden_output, self.weights_hidden_output) + self.bias_output
         return final_input, hidden_output
 
-    def backward(self, X, y, output, hidden_output, learning_rate, lambda_reg=0.01):
+    def backward(self, X, y, output, learning_rate, lambda_reg=0.01):
         output_error = output - y
         output_gradient = output_error
         hidden_error = np.dot(output_gradient, self.weights_hidden_output.T)
