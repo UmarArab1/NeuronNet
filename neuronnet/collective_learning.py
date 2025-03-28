@@ -1,6 +1,37 @@
 import numpy as np
 
 class AdamOptimizer:
+    pass  # Placeholder for AdamOptimizer class
+
+class RMSpropOptimizer:
+    def __init__(self, learning_rate=0.001, decay_rate=0.9, epsilon=1e-8):
+        self.learning_rate = learning_rate
+        self.decay_rate = decay_rate
+        self.epsilon = epsilon
+        self.cache = None
+
+    def update(self, param, grad):
+        if self.cache is None:
+            self.cache = np.zeros_like(param)
+        
+        self.cache = self.decay_rate * self.cache + (1 - self.decay_rate) * (grad ** 2)
+        param -= self.learning_rate * grad / (np.sqrt(self.cache) + self.epsilon)
+        return param
+    
+class RMSpropOptimizer:
+    def __init__(self, learning_rate=0.001, decay_rate=0.9, epsilon=1e-8):
+        self.learning_rate = learning_rate
+        self.decay_rate = decay_rate
+        self.epsilon = epsilon
+        self.cache = None
+
+    def update(self, param, grad):
+        if self.cache is None:
+            self.cache = np.zeros_like(param)
+        
+        self.cache = self.decay_rate * self.cache + (1 - self.decay_rate) * (grad ** 2)
+        param -= self.learning_rate * grad / (np.sqrt(self.cache) + self.epsilon)
+        return param
     def __init__(self, learning_rate=0.001, beta1=0.9, beta2=0.999, epsilon=1e-8, decay_rate=0.0):
         self.learning_rate = learning_rate
         self.beta1 = beta1
